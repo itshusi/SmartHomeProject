@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Built-By: huseyinarpalikli
+Class-Path: lib/gson-2.8.0.jar lib/jgoodies-common-1.8.1.jar lib/jgood
+ ies-forms-1.9.0.jar lib/webcam-capture-0.3.10.jar lib/slf4j-api-1.7.2
+ .jar lib/bridj-0.7.0.jar lib/dx-1.7.jar lib/org.eclipse.paho.client.m
+ qttv3-1.0.2.jar lib/webcam-capture-driver-v4l4j-0.3.11.jar lib/v4l4j-
+ 0.9.1-r507.jar
+Build-Jdk: 1.8.0_102
+Created-By: Maven Integration for Eclipse
+Main-Class: com.huseyina.project.hueambilight.Main
+

@@ -18,7 +18,7 @@ public class SyncProcess
     public static Rectangle CaptureSize = null; 
     public static int chunksNumX;
     public static int chunksNumY;
-    public static final int algorithms = 4;
+    public static final int algorithm = 1;
     
     static
     {
@@ -227,41 +227,9 @@ public class SyncProcess
         avg_rgb[2] = avg_rgb[2] / colorcontainer.length;
         avg_color = Color.RGBtoHSB(avg_rgb[0], avg_rgb[1], avg_rgb[2], null);
 
-        for (Color color : colorcontainer) // get max/min sat/bri
-        {
-            temp_color = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-            
-            if (temp_color[2] >= ((maxBri - minBri) / 2) + minBri)
-            {
-                bri_color[0] = (bri_color[0] + temp_color[0]) / 2;
-                bri_color[1] = (bri_color[1] + temp_color[1]) / 2;
-                bri_color[2] = (bri_color[2] + temp_color[2]) / 2;
-            }
 
-            if (temp_color[2] <= ((maxBri - minBri) / 2) + minBri)
-            {
-                dar_color[0] = (dar_color[0] + temp_color[0]) / 2;
-                dar_color[1] = (dar_color[1] + temp_color[1]) / 2;
-                dar_color[2] = (dar_color[2] + temp_color[2]) / 2;
-            }
-            
-            
-            if (temp_color[1] >= sat_color[1] && temp_color[2] >= ((maxBri - minBri) / 3 + minBri)) // ((maxBri - minBri) / 2 + minBri))
-            {
-                sat_color = temp_color;
-            }
-            /*if (temp_color[1] >= sat_color[1] && temp_color[2] >= avg_color[2])
-            {
-                sat_color = temp_color;
-            }*/
-            
-        }
-
-        Color[] extrColor = new Color[algorithms];
+        Color[] extrColor = new Color[algorithm];
         extrColor[0] = Color.getHSBColor(avg_color[0], avg_color[1], avg_color[2]);
-        extrColor[1] = Color.getHSBColor(sat_color[0], sat_color[1], sat_color[2]);
-        extrColor[2] = Color.getHSBColor(bri_color[0], bri_color[1], bri_color[2]);
-        extrColor[3] = Color.getHSBColor(dar_color[0], dar_color[1], dar_color[2]);
         
         setLightColor(extrColor);
     }

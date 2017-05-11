@@ -192,7 +192,7 @@ public class OptionInterface
 			}
 			panel_Lights.setLayout(new GridLayout(rows, 1, 5, 7));
 	
-			JLabel lblActiveNameColor = new JLabel("   active         name                               color algorithm                   brightness\r\n");
+			JLabel lblActiveNameColor = new JLabel("   active         name                                                  brightness\r\n");
 			scrollpane.setColumnHeaderView(lblActiveNameColor);
 			
 			// create the list
@@ -203,45 +203,6 @@ public class OptionInterface
 				
 				JLabel label_Name = new JLabel(light.name);
 				label_Name.setPreferredSize(new Dimension(110, 15));
-				
-				final JList list_Algorithms = new JList();
-				list_Algorithms.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-				list_Algorithms.setVisibleRowCount(1);
-				list_Algorithms.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				list_Algorithms.setModel(new AbstractListModel() 
-				{
-					String[] values = new String[] {"   A   ", "   B   ", "   C   ", "   D   "};
-					public int getSize() {
-						return values.length;
-					}
-					public Object getElementAt(int index) {
-						return values[index];
-					}
-				});
-				list_Algorithms.setSelectedIndex(Settings.Light.getAlgorithm(light));
-				list_Algorithms.addMouseMotionListener(new MouseMotionAdapter() {
-					@Override
-					public void mouseMoved(MouseEvent arg0) 
-					{
-						int algorithm = list_Algorithms.locationToIndex(arg0.getPoint());
-						if (algorithm == 0)
-						{
-							list_Algorithms.setToolTipText("average color");
-						}
-						else if (algorithm == 1)
-						{
-							list_Algorithms.setToolTipText("saturated color");
-						}
-						else if (algorithm == 2)
-						{
-							list_Algorithms.setToolTipText("bright color");
-						}
-						else if (algorithm == 3)
-						{
-							list_Algorithms.setToolTipText("dark color");
-						}
-					}
-				});
 	
 				JPanel panel_Brightness = new JPanel();
 				panel_Brightness.setLayout(new FormLayout(new ColumnSpec[] {
@@ -275,7 +236,6 @@ public class OptionInterface
 				if (checkbox_Active.isSelected() == false)
 				{
 					label_Name.setEnabled(false);
-					list_Algorithms.setEnabled(false);
 					slider_Brightness.setEnabled(false);
 					label_Brightness.setEnabled(false);
 				}
@@ -312,8 +272,7 @@ public class OptionInterface
 				panel_options.setLayout(flowlayout_options);
 				panel_options.add(checkbox_Active,0);
 				panel_options.add(label_Name,1);
-				panel_options.add(list_Algorithms,2);
-				panel_options.add(panel_Brightness,3);
+				panel_options.add(panel_Brightness,2);
 			}
 			
 		frame.pack();
@@ -356,11 +315,10 @@ public class OptionInterface
 			
 			JCheckBox checkbox_Active = (JCheckBox) panel_Light.getComponent(0);
 			Settings.Light.setActive(light, checkbox_Active.isSelected());
+
+			Settings.Light.setAlgorithm(light, 0);
 			
-			JList list_Algorithms = (JList) panel_Light.getComponent(2);
-			Settings.Light.setAlgorithm(light, list_Algorithms.getSelectedIndex());
-			
-			JPanel panel_Brightness = (JPanel) panel_Light.getComponent(3);
+			JPanel panel_Brightness = (JPanel) panel_Light.getComponent(2);
 			JSlider slider_Brightness = (JSlider) panel_Brightness.getComponent(0);
 			Settings.Light.setBrightness(light, slider_Brightness.getValue());
 		}

@@ -6,7 +6,6 @@ com/huseyina/project/hueambilight/ColorGridInterface$1.class
 com/huseyina/project/hueambilight/HBridge.class
 com/huseyina/project/hueambilight/SettingsLight.class
 com/huseyina/project/hueambilight/OptionInterface$3.class
-com/huseyina/project/hueambilight/OptionInterface$7.class
 com/huseyina/project/hueambilight/UserInterface$5.class
 com/huseyina/project/hueambilight/HBridge$2.class
 com/huseyina/project/hueambilight/ColorGridInterface.class
@@ -14,7 +13,6 @@ com/huseyina/project/hueambilight/UserInterface$3.class
 com/huseyina/project/hueambilight/OptionInterface$2.class
 com/huseyina/project/hueambilight/SyncProcess.class
 com/huseyina/project/hueambilight/UserInterface$8.class
-com/huseyina/project/hueambilight/OptionInterface$8.class
 com/huseyina/project/hueambilight/SettingsBridge.class
 com/huseyina/project/hueambilight/Main.class
 com/huseyina/project/hueambilight/ImageCaptureObject.class

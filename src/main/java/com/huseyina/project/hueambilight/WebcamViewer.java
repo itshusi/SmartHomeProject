@@ -46,7 +46,7 @@ public class WebcamViewer extends JFrame implements Runnable, WebcamListener, Wi
   }
 
   private Webcam webcam = null;
-  private WebcamPanel panel = null;
+//  private WebcamPanel panel = null;
   private WebcamPicker picker = null;
   private WebcamStreamer streamer = null;
   private static final long PERIOD = (long) 7.315200000000001; // EQUIVALENT TO 24FPS
@@ -134,9 +134,11 @@ public class WebcamViewer extends JFrame implements Runnable, WebcamListener, Wi
       }, PERIOD, PERIOD, TimeUnit.MILLISECONDS);
     }
   }
-  static {
-    Webcam.setDriver(new V4l4jDriver());
-}
+  
+  //For linux rPi
+//  static {
+//    Webcam.setDriver(new V4l4jDriver());
+//}
   public static void main(String[] args) {
     SwingUtilities.invokeLater(new WebcamViewer());
   }

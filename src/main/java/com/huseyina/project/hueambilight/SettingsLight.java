@@ -9,7 +9,7 @@ public class SettingsLight // light settings
 	private Preferences prefs = Preferences.userRoot().node("/hueambilight/lights");
 	
 	private int nexAlg = 0;
-	private int maxAlg = SyncProcess.algorithms;
+	private int maxAlg = SyncProcess.algorithm;
 	
 	public void check(HLight light) throws Exception // setup default light settings if it doesn't have
 	{

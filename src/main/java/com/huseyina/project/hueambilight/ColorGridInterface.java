@@ -71,8 +71,8 @@ public class ColorGridInterface
 	
 	public void setStandbyIcon(Rectangle CaptureSize, int ChunksNumX, int ChunksNumY) throws Exception // set a default image to illustrate the the chunks amount
 	{
-		int ChunkResX = (int)(SyncProcess.CaptureSize.getWidth() / 3) / SyncProcess.chunksNumX;
-		int ChunkResY = (int)(SyncProcess.CaptureSize.getHeight() / 3) / SyncProcess.chunksNumY;
+		int ChunkResX = (int)(SyncProcess.captureSize.getWidth() / 3) / SyncProcess.chunksNumX;
+		int ChunkResY = (int)(SyncProcess.captureSize.getHeight() / 3) / SyncProcess.chunksNumY;
 		
 		BufferedImage b = new BufferedImage(ChunkResX * SyncProcess.chunksNumX, ChunkResY * SyncProcess.chunksNumY, BufferedImage.TYPE_INT_RGB);
 		Graphics g = b.createGraphics();

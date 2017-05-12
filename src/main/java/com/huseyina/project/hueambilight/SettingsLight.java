@@ -8,8 +8,6 @@ public class SettingsLight // light settings
 {
 	private Preferences prefs = Preferences.userRoot().node("/hueambilight/lights");
 	
-	private int nexAlg = 0;
-	private int maxAlg = SyncProcess.algorithm;
 	
 	public void check(HLight light) throws Exception // setup default light settings if it doesn't have
 	{
@@ -21,15 +19,6 @@ public class SettingsLight // light settings
 		if (lprefs.get("bri", null) == null)
 		{
 			lprefs.putInt("bri", 100);
-		}
-		if (lprefs.get("alg", null) == null)
-		{
-			lprefs.putInt("alg", nexAlg);
-			nexAlg++;
-			if (nexAlg > maxAlg)
-			{
-				nexAlg = 0;
-			}
 		}
 	}
 	
@@ -70,11 +59,7 @@ public class SettingsLight // light settings
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
 		return lprefs.getBoolean("active", true);
 	}
-	public int getAlgorithm(HLight light)
-	{
-		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
-		return lprefs.getInt("alg", -1);
-	}
+
 	public int getBrightness(HLight light)
 	{
 		Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);

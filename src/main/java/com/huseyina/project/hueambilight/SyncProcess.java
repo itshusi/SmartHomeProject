@@ -14,11 +14,10 @@ import javax.swing.ImageIcon;
 public class SyncProcess
 {
     
-    private static Rectangle ScreenSize = null; 
-    public static Rectangle CaptureSize = null; 
+    private static Rectangle imgSize = null; 
+    public static Rectangle captureSize = null; 
     public static int chunksNumX;
     public static int chunksNumY;
-    public static final int algorithm = 1;
     
     static
     {
@@ -30,13 +29,13 @@ public class SyncProcess
       byte[] imageInByte = ImageCaptureObject.getImage();
       InputStream in = new ByteArrayInputStream(imageInByte);
       BufferedImage image = ImageIO.read(in);
-      Rectangle ScreenSize = new Rectangle(image.getMinX(),image.getMinY(),image.getWidth(), image.getHeight());
-      return ScreenSize;
+      Rectangle imgSize = new Rectangle(image.getMinX(),image.getMinY(),image.getWidth(), image.getHeight());
+      return imgSize;
     }
     public static void setStandbyOutput() throws Exception
     {
         setSettings();
-        Main.ui.cpi.setStandbyIcon(CaptureSize, chunksNumX, chunksNumY);
+        Main.ui.cpi.setStandbyIcon(captureSize, chunksNumX, chunksNumY);
     }
     
     private static void setSettings()
@@ -45,25 +44,25 @@ public class SyncProcess
         double ratio;
         int x, y, w, h;
         try {
-          ScreenSize = setImgBounds();
+          imgSize = setImgBounds();
         } catch (Exception e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
 
                 ratio = 1.0;
-                w = (int)ScreenSize.getWidth();
-                h = (int)ScreenSize.getHeight();
+                w = (int)imgSize.getWidth();
+                h = (int)imgSize.getHeight();
                 x = 0;
                 y = 0;
                
-        CaptureSize = new Rectangle((int)ScreenSize.getX() + x, (int)ScreenSize.getY() + y, w, h);
+        captureSize = new Rectangle((int)imgSize.getX() + x, (int)imgSize.getY() + y, w, h);
         
         // calculate number of chunks
         double chunks = Settings.getInteger("chunks");
         chunks = 3 + 0.35 * Math.pow(chunks, 1.4);
         chunksNumX = (int) Math.round(chunks);
-        chunksNumY = (int) Math.round(((double)CaptureSize.height / (double)CaptureSize.width) * chunksNumX); 
+        chunksNumY = (int) Math.round(((double)captureSize.height / (double)captureSize.width) * chunksNumX); 
         //round -> exact | ceil (round up) -> less options, always transverse | nothing (round down) -> imprecise
     }
     
@@ -86,24 +85,24 @@ public class SyncProcess
             lChunks = Settings.getInteger("chunks");
             lScreen = Settings.getInteger("screen");
             setSettings();
-            Main.ui.cpi.setStandbyIcon(CaptureSize, chunksNumX, chunksNumY);
+            Main.ui.cpi.setStandbyIcon(captureSize, chunksNumX, chunksNumY);
             forceStandbyColorGrid = true;
         }
     }
 
-    private static void capture() throws Exception // capture a selected screen area
+    private static void capture() throws Exception // capture a selected image 
     {
    // convert byte array back to BufferedImage
       byte[] imageInByte = ImageCaptureObject.getImage();
       InputStream in = new ByteArrayInputStream(imageInByte);
-      BufferedImage screenshot = ImageIO.read(in);
-      chunking(screenshot);
+      BufferedImage img = ImageIO.read(in);
+      chunking(img);
     }
     
-    private static void chunking(BufferedImage screenshot) throws Exception // split the image in several chunks
+    private static void chunking(BufferedImage img) throws Exception // split the image in several chunks
     {       
-        int chunkResX = screenshot.getWidth() / chunksNumX;
-        int chunkResY = screenshot.getHeight() / chunksNumY;
+        int chunkResX = img.getWidth() / chunksNumX;
+        int chunkResY = img.getHeight() / chunksNumY;
         
         BufferedImage[] chunks = new BufferedImage[chunksNumX * chunksNumY];
         
@@ -112,7 +111,7 @@ public class SyncProcess
         {
             for (int y = 0; y < chunksNumY; y++)
             {
-                chunks[id] = screenshot.getSubimage(chunkResX * x, chunkResY * y, chunkResX, chunkResY);
+                chunks[id] = img.getSubimage(chunkResX * x, chunkResY * y, chunkResX, chunkResY);
                 id++;
             }
         }
@@ -152,15 +151,15 @@ public class SyncProcess
             drawColorGrid(avgColors);
         }
         
-        analyze(avgColors);
+        analyse(avgColors);
     }
     
     private static void drawColorGrid(Color[] ColorContainer) // draw the chunks in the color grid interface
     {
         if (forceStandbyColorGrid == false)
         {
-            int ChunkResX = (int)(CaptureSize.getWidth() / 3) / chunksNumX;
-            int ChunkResY = (int)(CaptureSize.getHeight() / 3) / chunksNumY;
+            int ChunkResX = (int)(captureSize.getWidth() / 3) / chunksNumX;
+            int ChunkResY = (int)(captureSize.getHeight() / 3) / chunksNumY;
             
             BufferedImage b = new BufferedImage(ChunkResX * chunksNumX, ChunkResY * chunksNumY, BufferedImage.TYPE_INT_RGB);
             Graphics g = b.createGraphics();
@@ -182,14 +181,11 @@ public class SyncProcess
         }
     }
 
-    private static void analyze(Color[] colorcontainer) throws Exception // analyze all chunks
+    private static void analyse(Color[] colorcontainer) throws Exception // analyse all chunks
     {
         float[] temp_color;
         
         float[] avg_color = Color.RGBtoHSB(0, 0, 0, null);
-        float[] sat_color = Color.RGBtoHSB(0, 0, 0, null);
-        float[] bri_color = Color.RGBtoHSB(0, 0, 0, null);
-        float[] dar_color = Color.RGBtoHSB(0, 0, 0, null);
         
         float minSat = 1;
         float maxSat = 0;
@@ -228,7 +224,7 @@ public class SyncProcess
         avg_color = Color.RGBtoHSB(avg_rgb[0], avg_rgb[1], avg_rgb[2], null);
 
 
-        Color[] extrColor = new Color[algorithm];
+        Color[] extrColor = new Color[1];
         extrColor[0] = Color.getHSBColor(avg_color[0], avg_color[1], avg_color[2]);
         
         setLightColor(extrColor);
@@ -239,11 +235,10 @@ public class SyncProcess
         for (HLight light : HBridge.lights)
         {
             boolean active = Settings.Light.getActive(light);
-            int alg = Settings.Light.getAlgorithm(light);
             
             if(active)
             {
-                Main.hueControl.setLight(light, extrColor[alg]);
+                Main.hueControl.setLight(light, extrColor[0]);
             }
         }
     }

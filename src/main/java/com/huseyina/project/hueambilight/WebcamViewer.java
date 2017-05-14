@@ -18,6 +18,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.lang3.SystemUtils;
+
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamDiscoveryEvent;
 import com.github.sarxos.webcam.WebcamDiscoveryListener;
@@ -126,20 +128,18 @@ public class WebcamViewer extends JFrame implements Runnable, WebcamListener, Wi
             // TODO Auto-generated catch block
             e.printStackTrace();
           }
-
-          // WebcamUtils.capture(webcam, "images/" + dateFormat.format(date),
-          // ImageUtils.FORMAT_JPG);
-          // System.gc ();
-          // System.runFinalization ();
         }
       }, PERIOD, PERIOD, TimeUnit.MILLISECONDS);
     }
   }
-
+  
   // For linux rPi
-  // static {
-  // Webcam.setDriver(new V4l4jDriver());
-  // }
+   static {
+     if(SystemUtils.IS_OS_LINUX){
+   Webcam.setDriver(new V4l4jDriver());
+     }
+   }
+    
   public static void main(String[] args) {
     SwingUtilities.invokeLater(new WebcamViewer());
   }

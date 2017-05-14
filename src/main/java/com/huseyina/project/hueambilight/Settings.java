@@ -16,7 +16,7 @@ public class Settings {
       ArrayList<String> keys = new ArrayList<String>(Arrays.asList(prefs.keys()));
       String[] settingList =
           {"ui_x", "ui_y", "cpi_x", "cpi_y", "oi_x", "oi_y", "chunks", "brightness", "saturation",
-              "format", "colorgrid", "restorelight", "autoswitch", "gammacorrection", "screen"};
+              "format", "colorgrid", "restorelight", "autoswitch", "gammacorrection"};
 
       ArrayList<String> settings = new ArrayList<String>(Arrays.asList(settingList));
 
@@ -37,7 +37,7 @@ public class Settings {
     prefs.putInt("cpi_y", 200);
     prefs.putInt("oi_x", 250);
     prefs.putInt("oi_y", 450);
-    prefs.putInt("chunks", 12);
+    prefs.putInt("chunks", 850);
     prefs.putInt("brightness", 100);
     prefs.putInt("saturation", 110);
     prefs.putInt("format", 0);
@@ -45,7 +45,6 @@ public class Settings {
     prefs.putBoolean("restorelight", true);
     prefs.putBoolean("autoswitch", false);
     prefs.putBoolean("gammacorrection", true);
-    prefs.putInt("screen", 0);
   }
 
   public static void reset(boolean exit) throws Exception // delete all settings and exit the

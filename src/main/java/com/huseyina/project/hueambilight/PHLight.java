@@ -3,17 +3,17 @@ package com.huseyina.project.hueambilight;
 import com.google.gson.JsonObject;
 
 
-public class HLight {
+public class PHLight {
   public final int id;
   public final String name;
   public final String uniqueid;
   private int[] storedLightColor = new int[3];
 
-  public HLight(int LightID) throws Exception {
+  public PHLight(int LightID) throws Exception {
     id = LightID;
 
-    JsonObject response = HRequest
-        .GET("http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id);
+    JsonObject response = Request
+        .GET("http://" + PHBridge.internalipaddress + "/api/" + PHBridge.username + "/lights/" + id);
     name = response.get("name").getAsString();
     uniqueid = response.get("uniqueid").getAsString();
 
@@ -21,31 +21,31 @@ public class HLight {
   }
 
   public boolean isOn() throws Exception {
-    JsonObject response = HRequest
-        .GET("http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id);
+    JsonObject response = Request
+        .GET("http://" + PHBridge.internalipaddress + "/api/" + PHBridge.username + "/lights/" + id);
 
     return response.get("state").getAsJsonObject().get("on").getAsBoolean();
   }
 
   public void turnOn() throws Exception {
-    String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/"
+    String APIurl = "http://" + PHBridge.internalipaddress + "/api/" + PHBridge.username + "/lights/"
         + id + "/state/";
     String data = "{\"on\": true, \"transitiontime\":4, \"bri\":255}";
 
-    HRequest.PUT(APIurl, data);
+    Request.PUT(APIurl, data);
   }
 
   public void turnOff() throws Exception {
-    String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/"
+    String APIurl = "http://" + PHBridge.internalipaddress + "/api/" + PHBridge.username + "/lights/"
         + id + "/state/";
     String data = "{\"on\": false, \"transitiontime\":4}";
 
-    HRequest.PUT(APIurl, data);
+    Request.PUT(APIurl, data);
   }
 
   public void storeLightColor() throws Exception {
-    JsonObject response = HRequest
-        .GET("http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/" + id);
+    JsonObject response = Request
+        .GET("http://" + PHBridge.internalipaddress + "/api/" + PHBridge.username + "/lights/" + id);
 
     storedLightColor[0] = response.get("state").getAsJsonObject().get("hue").getAsInt();
     storedLightColor[1] = response.get("state").getAsJsonObject().get("sat").getAsInt();
@@ -53,11 +53,11 @@ public class HLight {
   }
 
   public void restoreLightColor() throws Exception {
-    String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/"
+    String APIurl = "http://" + PHBridge.internalipaddress + "/api/" + PHBridge.username + "/lights/"
         + id + "/state/";
     String data = "{\"hue\":" + storedLightColor[0] + ", \"sat\":" + storedLightColor[1]
         + ", \"bri\":" + storedLightColor[2] + ", \"transitiontime\":1}";
 
-    HRequest.PUT(APIurl, data);
+    Request.PUT(APIurl, data);
   }
 }

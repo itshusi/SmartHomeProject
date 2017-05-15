@@ -125,7 +125,7 @@ public class OptionInterface {
 
     panel_Lights = new JPanel();
     scrollpane.setViewportView(panel_Lights);
-    int rows = HBridge.countLights();
+    int rows = PHBridge.countLights();
     if (rows < 6) {
       rows = 6;
     }
@@ -136,9 +136,9 @@ public class OptionInterface {
     scrollpane.setColumnHeaderView(lblActiveNameColor);
 
     // create the list
-    for (final HLight light : HBridge.lights) {
+    for (final PHLight light : PHBridge.lights) {
       final JPanel panel_options = new JPanel();
-      panel_Lights.add(panel_options, HBridge.lights.indexOf(light));
+      panel_Lights.add(panel_options, PHBridge.lights.indexOf(light));
 
       JLabel label_Name = new JLabel(light.name);
       label_Name.setPreferredSize(new Dimension(110, 15));
@@ -221,8 +221,8 @@ public class OptionInterface {
     Settings.set("autoswitch", checkbox_AutoTurnOff.isSelected());
     Settings.set("gammacorrection", checkbox_UseGammaCorrection.isSelected());
 
-    for (HLight light : HBridge.lights) {
-      JPanel panel_Light = (JPanel) panel_Lights.getComponent(HBridge.lights.indexOf(light));
+    for (PHLight light : PHBridge.lights) {
+      JPanel panel_Light = (JPanel) panel_Lights.getComponent(PHBridge.lights.indexOf(light));
 
       JCheckBox checkbox_Active = (JCheckBox) panel_Light.getComponent(0);
       Settings.Light.setActive(light, checkbox_Active.isSelected());

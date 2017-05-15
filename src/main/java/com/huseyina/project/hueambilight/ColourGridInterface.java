@@ -14,18 +14,18 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
-public class ColorGridInterface {
+public class ColourGridInterface {
   public JFrame frame;
   private JPanel contentpane;
   public JLabel label_Colors;
 
-  public ColorGridInterface() {
+  public ColourGridInterface() {
     initialize();
   }
 
   private void initialize() {
     frame = new JFrame();
-    frame.setTitle("color grid");
+    frame.setTitle("Colour Grid");
     frame.setResizable(false);
     frame.setBounds(100, 100, 640, 360);
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

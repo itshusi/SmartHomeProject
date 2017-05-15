@@ -226,7 +226,7 @@ public class SyncProcess {
   private static void setLightColor(Color[] extrColor) throws Exception // distribute the colors to
                                                                         // the lights
   {
-    for (HLight light : HBridge.lights) {
+    for (PHLight light : PHBridge.lights) {
       boolean active = Settings.Light.getActive(light);
 
       if (active) {

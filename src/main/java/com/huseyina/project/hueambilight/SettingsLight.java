@@ -7,7 +7,7 @@ public class SettingsLight // light settings
   private Preferences prefs = Preferences.userRoot().node("/hueambilight/lights");
 
 
-  public void check(HLight light) throws Exception // setup default light settings if it doesn't
+  public void check(PHLight light) throws Exception // setup default light settings if it doesn't
                                                    // have
   {
     Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
@@ -19,27 +19,27 @@ public class SettingsLight // light settings
     }
   }
 
-  public void setBrightness(HLight light, int bri) {
+  public void setBrightness(PHLight light, int bri) {
     Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
     lprefs.putInt("bri", bri);
   }
 
-  public void setActive(HLight light, boolean active) {
+  public void setActive(PHLight light, boolean active) {
     Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
     lprefs.putBoolean("active", active);
   }
 
-  public void setAlgorithm(HLight light, int alg) {
+  public void setAlgorithm(PHLight light, int alg) {
     Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
     lprefs.putInt("alg", alg);
   }
 
-  public boolean getActive(HLight light) {
+  public boolean getActive(PHLight light) {
     Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
     return lprefs.getBoolean("active", true);
   }
 
-  public int getBrightness(HLight light) {
+  public int getBrightness(PHLight light) {
     Preferences lprefs = Preferences.userRoot().node(prefs.absolutePath() + "/" + light.uniqueid);
     return lprefs.getInt("bri", -1);
   }

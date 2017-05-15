@@ -111,4 +111,11 @@ class SettingsBridge // bridge settings
   public String getInternalipaddress() {
     return prefs.get("internalipaddress", null);
   }
+  public void setUsername(String username) {
+    prefs.put("username", username);
+  }
+
+  public String getUsername() {
+    return prefs.get("username", null);
+  }
 }

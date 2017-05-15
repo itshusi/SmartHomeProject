@@ -66,7 +66,7 @@ public class UserInterface extends JFrame implements MqttCallback {
   private JMenuItem menuitem_Options;
   private JMenuItem menuitem_Reset;
   private Component rigidarea;
-  public ColorGridInterface cpi = new ColorGridInterface();
+  public ColourGridInterface cpi = new ColourGridInterface();
   private JLabel label_Saturation;
   private JPanel panel_Saturation;
   public JSlider slider_Saturation;
@@ -470,7 +470,7 @@ public class UserInterface extends JFrame implements MqttCallback {
       boolean lightOn = false;
       boolean lightOff = false;
 
-      for (HLight light : HBridge.lights) {
+      for (PHLight light : PHBridge.lights) {
         if (light.isOn() && Settings.Light.getActive(light)) {
           lightOn = true;
         } else if (!light.isOn() && Settings.Light.getActive(light)) {

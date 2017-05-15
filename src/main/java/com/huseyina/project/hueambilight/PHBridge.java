@@ -7,24 +7,24 @@ import java.util.TimerTask;
 import com.google.gson.*;
 
 
-public class HBridge {
+public class PHBridge {
   public static String internalipaddress = Settings.Bridge.getInternalipaddress();
 
-  public static final String username = "Cl7Gy44bZqsqP49SeGPD6ZC26eYKavy5UktIBu2N";
+  public static String username = Settings.Bridge.getUsername();
   public static final String devicetype = "hueambilight";
 
-  public static ArrayList<HLight> lights = new ArrayList<HLight>();
+  public static ArrayList<PHLight> lights = new ArrayList<PHLight>();
 
   public static void setup() throws Exception {
-    if (internalipaddress != null) {
+    if (internalipaddress != null && username != null) {
       fastConnect();
     } else {
       newConnect();
     }
   }
 
-  public static HLight getLight(int lightID) {
-    for (HLight light : lights) {
+  public static PHLight getLight(int lightID) {
+    for (PHLight light : lights) {
       if (light.id == lightID) {
         return light;
       }
@@ -36,9 +36,9 @@ public class HBridge {
   {
     System.out.println("trying fast connect");
 
-    JsonObject response = HRequest.GET("http://" + internalipaddress + "/api/" + username);
+    JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username);
 
-    if (HRequest.responseCheck(response) == "data") {
+    if (Request.responseCheck(response) == "data") {
       System.out.println("fast connect successful");
 
       getLights();
@@ -64,7 +64,7 @@ public class HBridge {
       public void run() {
         try // to get the bridge ip
         {
-          JsonObject response = HRequest.GET("https://www.meethue.com/api/nupnp");
+          JsonObject response = Request.GET("https://www.meethue.com/api/nupnp");
 
           if (response != null) {
             timer.cancel();
@@ -82,7 +82,7 @@ public class HBridge {
           System.out.println("ERROR: " + e);
         }
 
-        if (tries > 6) // abort after serval tries
+        if (tries > 6) // abort after several tries
         {
           try {
             timer.cancel();
@@ -102,14 +102,14 @@ public class HBridge {
 
   private static void login() throws Exception // try to login
   {
-    JsonObject response = HRequest.GET("http://" + internalipaddress + "/api/" + username);
-    if (HRequest.responseCheck(response) == "data") {
+    JsonObject response = Request.GET("http://" + internalipaddress + "/api/" + username);
+    if (Request.responseCheck(response) == "data") {
       System.out.println("login successful");
 
       getLights();
 
       Main.ui.setConnectState(2);
-    } else if (HRequest.responseCheck(response) == "error") {
+    } else if (Request.responseCheck(response) == "error") {
       createUser();
     }
   }
@@ -117,13 +117,13 @@ public class HBridge {
   private static void getLights() throws Exception {
     System.out.println("getting lights");
     JsonObject response =
-        HRequest.GET("http://" + internalipaddress + "/api/" + username + "/lights/");
+        Request.GET("http://" + internalipaddress + "/api/" + username + "/lights/");
 
     for (int i = 1; i < 50; i++) {
       if (response.has(String.valueOf(i))) {
         JsonObject state = response.getAsJsonObject(String.valueOf(i)).getAsJsonObject("state");
         if (state.has("on") && state.has("hue") && state.has("sat") && state.has("bri")) {
-          lights.add(new HLight(i));
+          lights.add(new PHLight(i));
         }
       }
     }
@@ -142,17 +142,20 @@ public class HBridge {
 
     final Timer timer = new Timer();
     TimerTask addUserLoop = new TimerTask() {
-      String body = "{\"devicetype\": \"" + devicetype + "\", \"username\": \"" + username + "\"}";
+      String body = "{\"devicetype\": \"" + devicetype + "\"}";
       int tries = 0;
 
       public void run() {
         try // to register a new bridge user (user must press the link button)
         {
           tries++;
-          JsonObject response = HRequest.POST("http://" + internalipaddress + "/api/", body);
-          if (HRequest.responseCheck(response) == "success") {
+          JsonObject response = Request.POST("http://" + internalipaddress + "/api/", body);
+          if (Request.responseCheck(response) == "success") {
             timer.cancel();
             timer.purge();
+            username = response.get("success").getAsJsonObject().get("username").getAsString();
+            Settings.Bridge.setUsername(username);
+            System.out.println("USERNAME" + username);
             System.out.println("new user created");
             login();
           } else if (tries > 20) // abort after serval tries

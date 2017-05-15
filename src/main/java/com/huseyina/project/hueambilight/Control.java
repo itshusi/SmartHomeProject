@@ -13,7 +13,7 @@ public class Control {
   private float lastAutoOffBri = 0f;
 
   public Control() throws Exception {
-    HBridge.setup();
+    PHBridge.setup();
 
     if (Main.arguments.contains("force-on") && !Main.arguments.contains("force-off")) {
       turnAllLightsOn();
@@ -26,7 +26,7 @@ public class Control {
     }
   }
 
-  public void setLight(HLight light, Color color) throws Exception // calculate color and send it to
+  public void setLight(PHLight light, Color color) throws Exception // calculate color and send it to
                                                                    // light
   {
     float[] colorHSB = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // unmodified
@@ -38,11 +38,11 @@ public class Control {
         (float) (colorHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f)
             * (Settings.Light.getBrightness(light) / 100f))); // modified color
 
-    double[] xy = HColor.translate(color, Settings.getBoolean("gammacorrection")); // xy color
+    double[] xy = ColourCalc.translate(color, Settings.getBoolean("gammacorrection")); // xy color
     int bri = Math
         .round(Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null)[2] * 255); // brightness
 
-    String APIurl = "http://" + HBridge.internalipaddress + "/api/" + HBridge.username + "/lights/"
+    String APIurl = "http://" + PHBridge.internalipaddress + "/api/" + PHBridge.username + "/lights/"
         + light.id + "/state";
     String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":"
         + transitionTime + "}";
@@ -61,7 +61,7 @@ public class Control {
           + ", \"transitiontime\":" + transitionTime + "}";
     }
 
-    HRequest.PUT(APIurl, data);
+    Request.PUT(APIurl, data);
   }
 
   public void startAmbilightProcess() throws Exception {
@@ -73,7 +73,7 @@ public class Control {
 
     ambilightProcessIsActive = true;
 
-    for (HLight light : HBridge.lights) {
+    for (PHLight light : PHBridge.lights) {
       light.storeLightColor();
     }
 
@@ -107,7 +107,7 @@ public class Control {
 
     if (Settings.getBoolean("restorelight")) {
       Thread.sleep(750);
-      for (HLight light : HBridge.lights) {
+      for (PHLight light : PHBridge.lights) {
         light.restoreLightColor();
       }
     }
@@ -115,7 +115,7 @@ public class Control {
 
 
   public void turnAllLightsOn() throws Exception {
-    for (HLight light : HBridge.lights) {
+    for (PHLight light : PHBridge.lights) {
       if (Settings.Light.getActive(light)) {
         light.turnOn();
       }
@@ -124,7 +124,7 @@ public class Control {
   }
 
   public void turnAllLightsOff() throws Exception {
-    for (HLight light : HBridge.lights) {
+    for (PHLight light : PHBridge.lights) {
       if (Settings.Light.getActive(light)) {
         light.turnOff();
       }

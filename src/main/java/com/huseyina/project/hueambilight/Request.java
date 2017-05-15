@@ -8,7 +8,7 @@ import java.net.URL;
 
 import com.google.gson.*;
 
-public class HRequest {
+public class Request {
 
   public static JsonObject GET(String APIurl) throws Exception // GET Request
   {

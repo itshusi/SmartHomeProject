@@ -4,7 +4,7 @@ public class ImageCaptureObject {
 
   private static byte[] image;
 
-  private static final ImageCaptureObject instance = new ImageCaptureObject();
+  private static ImageCaptureObject instance = null;
 
   private ImageCaptureObject() {
     // do nothing
@@ -15,6 +15,9 @@ public class ImageCaptureObject {
   }
 
   public static ImageCaptureObject getInstance() {
+    if (instance == null) {
+      instance = new ImageCaptureObject();
+    }
     return instance;
   }
 

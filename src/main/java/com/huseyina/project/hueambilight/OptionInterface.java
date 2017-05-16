@@ -75,12 +75,12 @@ public class OptionInterface {
 
     checkbox_AutoTurnOff = new JCheckBox("   auto. turn off lights");
     checkbox_AutoTurnOff
-        .setToolTipText("turns the lights automatically off when the screen is near black");
+        .setToolTipText("turns the lights automatically off when the image is near black");
     frame.getContentPane().add(checkbox_AutoTurnOff, "3, 2, 2, 1, left, center");
 
     checkbox_UseGammaCorrection = new JCheckBox("   use gamma correction");
     checkbox_UseGammaCorrection
-        .setToolTipText("makes the color more like the color on your screen");
+        .setToolTipText("makes the colour more like the colour on your screen");
     frame.getContentPane().add(checkbox_UseGammaCorrection, "3, 4, 2, 1, left, center");
 
     JSeparator separator_1 = new JSeparator();
@@ -131,9 +131,9 @@ public class OptionInterface {
     }
     panel_Lights.setLayout(new GridLayout(rows, 1, 5, 7));
 
-    JLabel lblActiveNameColor = new JLabel(
+    JLabel lblActiveNameColour = new JLabel(
         "   active         name                                                  brightness\r\n");
-    scrollpane.setColumnHeaderView(lblActiveNameColor);
+    scrollpane.setColumnHeaderView(lblActiveNameColour);
 
     // create the list
     for (final PHLight light : PHBridge.lights) {
@@ -169,7 +169,7 @@ public class OptionInterface {
       final JCheckBox checkbox_Active = new JCheckBox();
       checkbox_Active.setSelected(Settings.Light.getActive(light));
       checkbox_Active
-          .setToolTipText("allow the program to change this lights color and brightness");
+          .setToolTipText("allow the program to change this lights colour and brightness");
       if (checkbox_Active.isSelected() == false) {
         label_Name.setEnabled(false);
         slider_Brightness.setEnabled(false);
@@ -181,16 +181,9 @@ public class OptionInterface {
             if (checkbox_Active.isSelected()) {
               panel_options.getComponent(1).setEnabled(true);
               panel_options.getComponent(2).setEnabled(true);
-              JPanel panel = (JPanel) panel_options.getComponent(3);
-              panel.getComponent(0).setEnabled(true);
-              panel.getComponent(1).setEnabled(true);
             } else {
               panel_options.getComponent(1).setEnabled(false);
               panel_options.getComponent(2).setEnabled(false);
-              panel_options.getComponent(3).setEnabled(false);
-              JPanel panel = (JPanel) panel_options.getComponent(3);
-              panel.getComponent(0).setEnabled(false);
-              panel.getComponent(1).setEnabled(false);
             }
           } catch (Exception e) {
             System.out.println("ERROR: " + e);

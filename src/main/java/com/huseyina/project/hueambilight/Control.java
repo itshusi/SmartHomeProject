@@ -14,47 +14,38 @@ public class Control {
 
   public Control() throws Exception {
     PHBridge.setup();
-
-    if (Main.arguments.contains("force-on") && !Main.arguments.contains("force-off")) {
-      turnAllLightsOn();
-    }
-    if (Main.arguments.contains("force-off") && !Main.arguments.contains("force-on")) {
-      turnAllLightsOff();
-    }
-    if (Main.arguments.contains("force-start")) {
-      startAmbilightProcess();
-    }
   }
 
-  public void setLight(PHLight light, Color color) throws Exception // calculate color and send it to
-                                                                   // light
+  public void setLight(PHLight light, Color colour) throws Exception // calculate colour and send it
+                                                                     // to
+  // light
   {
-    float[] colorHSB = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null); // unmodified
-                                                                                                // HSB
-                                                                                                // color
+    float[] colourHSB = Color.RGBtoHSB(colour.getRed(), colour.getGreen(), colour.getBlue(), null); // unmodified
+    // HSB
+    // colour
 
-    color = Color.getHSBColor(colorHSB[0],
-        Math.max(0f, Math.min(1f, colorHSB[1] * (Main.ui.slider_Saturation.getValue() / 100f))),
-        (float) (colorHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f)
-            * (Settings.Light.getBrightness(light) / 100f))); // modified color
+    colour = Color.getHSBColor(colourHSB[0],
+        Math.max(0f, Math.min(1f, colourHSB[1] * (Main.ui.slider_Saturation.getValue() / 100f))),
+        (float) (colourHSB[2] * (Main.ui.slider_Brightness.getValue() / 100f)
+            * (Settings.Light.getBrightness(light) / 100f))); // modified colour
 
-    double[] xy = ColourCalc.translate(color, Settings.getBoolean("gammacorrection")); // xy color
+    double[] xy = ColourCalc.translate(colour, Settings.getBoolean("gammacorrection")); // xy colour
     int bri = Math
-        .round(Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null)[2] * 255); // brightness
+        .round(Color.RGBtoHSB(colour.getRed(), colour.getGreen(), colour.getBlue(), null)[2] * 255); // brightness
 
-    String APIurl = "http://" + PHBridge.internalipaddress + "/api/" + PHBridge.username + "/lights/"
-        + light.id + "/state";
+    String APIurl = "http://" + PHBridge.internalipaddress + "/api/" + PHBridge.username
+        + "/lights/" + light.id + "/state";
     String data = "{\"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri + ", \"transitiontime\":"
         + transitionTime + "}";
 
     // turn light off automatically if the brightness is very low
     if (Settings.getBoolean("autoswitch")) {
-      if (colorHSB[2] > lastAutoOffBri + 0.1f && light.isOn() == false) {
+      if (colourHSB[2] > lastAutoOffBri + 0.1f && light.isOn() == false) {
         data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri
             + ", \"transitiontime\":" + transitionTime + "}";
-      } else if (colorHSB[2] <= 0.0627451f && light.isOn() == true) {
+      } else if (colourHSB[2] <= 0.0627451f && light.isOn() == true) {
         data = "{\"on\":false, \"transitiontime\":3}";
-        lastAutoOffBri = colorHSB[2];
+        lastAutoOffBri = colourHSB[2];
       }
     } else if (Settings.getBoolean("autoswitch") == false && light.isOn() == false) {
       data = "{\"on\":true, \"xy\":[" + xy[0] + ", " + xy[1] + "], \"bri\":" + bri
@@ -74,7 +65,7 @@ public class Control {
     ambilightProcessIsActive = true;
 
     for (PHLight light : PHBridge.lights) {
-      light.storeLightColor();
+      light.storeLightColour();
     }
 
     // create a loop to execute the ambilight process
@@ -108,7 +99,7 @@ public class Control {
     if (Settings.getBoolean("restorelight")) {
       Thread.sleep(750);
       for (PHLight light : PHBridge.lights) {
-        light.restoreLightColor();
+        light.restoreLightColour();
       }
     }
   }

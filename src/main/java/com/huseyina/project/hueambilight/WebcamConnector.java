@@ -33,22 +33,21 @@ import com.github.sarxos.webcam.ds.v4l4j.V4l4jDriver;
 
 
 /**
- * Proof of concept of how to handle webcam video stream from Java
+ * Handle webcam video stream and image capture from Java
  * 
  * @author Huseyin Arpalikli
  */
 
-public class WebcamViewer extends JFrame implements Runnable, WebcamListener, WindowListener,
+public class WebcamConnector extends JFrame implements Runnable, WebcamListener, WindowListener,
     UncaughtExceptionHandler, ItemListener, WebcamDiscoveryListener {
 
   private static final long serialVersionUID = 1L;
 
-  public WebcamViewer() {
+  public WebcamConnector() {
     run();
   }
 
   private Webcam webcam = null;
-  // private WebcamPanel panel = null;
   private WebcamPicker picker = null;
   private WebcamStreamer streamer = null;
   private static final long PERIOD = (long) 7.315200000000001; // EQUIVALENT TO 24FPS
@@ -73,35 +72,16 @@ public class WebcamViewer extends JFrame implements Runnable, WebcamListener, Wi
       System.exit(1);
     }
 
-    webcam.setViewSize(/* WebcamResolution.VGA.getSize() */new Dimension(640, 480));
-    webcam.addWebcamListener(WebcamViewer.this);
-    // panel = new WebcamPanel(webcam, false);
-    // panel.setFPSDisplayed(true);
-    // panel.setFPSLimit(30);
-    // panel.setFPSLimited(true);
-    // panel.setMirrored(false);
-    // panel.setDisplayDebugInfo(true);
-    // panel.setImageSizeDisplayed(true);
+    webcam.setViewSize(WebcamResolution.VGA.getSize());
+    webcam.addWebcamListener(WebcamConnector.this);
+
     webcam.open();
     streamer = new WebcamStreamer(8080, webcam, 30, true);
     add(picker, BorderLayout.NORTH);
-    // add(panel, BorderLayout.CENTER);
 
     pack();
     setResizable(false);
     setVisible(true);
-
-
-    // Thread t = new Thread() {
-    // @Override
-    // public void run() {
-    // panel.start();
-    // }
-    // };
-    // t.setName("starter");
-    // t.setDaemon(true);
-    // t.setUncaughtExceptionHandler(this);
-    // t.start();
 
     imageCapture();
 
@@ -123,6 +103,7 @@ public class WebcamViewer extends JFrame implements Runnable, WebcamListener, Wi
             baos.flush();
             imageInByte = baos.toByteArray();
             baos.close();
+            ImageCaptureObject.getInstance();
             ImageCaptureObject.setImage(imageInByte);
           } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -132,16 +113,16 @@ public class WebcamViewer extends JFrame implements Runnable, WebcamListener, Wi
       }, PERIOD, PERIOD, TimeUnit.MILLISECONDS);
     }
   }
-  
+
   // For linux rPi
-   static {
-     if(SystemUtils.IS_OS_LINUX){
-   Webcam.setDriver(new V4l4jDriver());
-     }
-   }
-    
+  static {
+    if (SystemUtils.IS_OS_LINUX) {
+      Webcam.setDriver(new V4l4jDriver());
+    }
+  }
+
   public static void main(String[] args) {
-    SwingUtilities.invokeLater(new WebcamViewer());
+    SwingUtilities.invokeLater(new WebcamConnector());
   }
 
   @Override
@@ -185,14 +166,12 @@ public class WebcamViewer extends JFrame implements Runnable, WebcamListener, Wi
   @Override
   public void windowDeiconified(WindowEvent e) {
     System.out.println("webcam viewer resumed");
-    // panel.resume();
     imageCapture();
   }
 
   @Override
   public void windowIconified(WindowEvent e) {
     System.out.println("webcam viewer paused");
-    // panel.pause();
   }
 
   @Override
@@ -205,11 +184,6 @@ public class WebcamViewer extends JFrame implements Runnable, WebcamListener, Wi
   public void itemStateChanged(ItemEvent e) {
     if (e.getItem() != webcam) {
       if (webcam != null) {
-
-        // panel.stop();
-
-        // remove(panel);
-
         streamer.stop();
         webcam.removeWebcamListener(this);
         webcam.close();
@@ -219,28 +193,6 @@ public class WebcamViewer extends JFrame implements Runnable, WebcamListener, Wi
         webcam.addWebcamListener(this);
         webcam.open();
         System.out.println("selected " + webcam.getName());
-
-        // panel = new WebcamPanel(webcam, false);
-        // panel.setFPSDisplayed(true);
-        // panel.setFPSLimit(30);
-        // panel.setFPSLimited(true);
-        // panel.setMirrored(false);
-        // panel.setDisplayDebugInfo(true);
-        // panel.setImageSizeDisplayed(true);
-        // add(panel, BorderLayout.CENTER);
-        // pack();
-        //
-        // Thread t = new Thread() {
-        //
-        // @Override
-        // public void run() {
-        // panel.start();
-        // }
-        // };
-        // t.setName("restart");
-        // t.setDaemon(true);
-        // t.setUncaughtExceptionHandler(this);
-        // t.start();
 
         imageCapture();
         streamer = new WebcamStreamer(8080, webcam, 30, true);

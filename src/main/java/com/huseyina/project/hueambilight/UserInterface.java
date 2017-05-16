@@ -50,7 +50,7 @@ public class UserInterface extends JFrame implements MqttCallback {
   private JLabel labelConnect;
   public JButton button_Stop;
   public JButton button_Start;
-  public JCheckBox checkbox_ShowColorGrid;
+  public JCheckBox checkbox_ShowColourGrid;
   public JSlider slider_Brightness;
   private JPanel panel_Brightness;
   private JLabel label_BrightnessPercentage;
@@ -94,7 +94,7 @@ public class UserInterface extends JFrame implements MqttCallback {
       UIManager.put("ToggleButton.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
       UIManager.put("RadioButton.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
       UIManager.put("CheckBox.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
-      UIManager.put("ColorChooser.font", new FontUIResource("Dialog.plain", Font.PLAIN, 12));
+      UIManager.put("ColourChooser.font", new FontUIResource("Dialog.plain", Font.PLAIN, 12));
       UIManager.put("ComboBox.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
       UIManager.put("List.font", new FontUIResource("Tahoma", Font.PLAIN, 11));
       UIManager.put("RadioButtonMenuItem.font", new FontUIResource("Segoe UI", Font.PLAIN, 12));
@@ -233,22 +233,22 @@ public class UserInterface extends JFrame implements MqttCallback {
     // Setup On/Off Buttons
     setupOnOffButton();
 
-    // CheckBox to show the color grid (debug feature)
-    checkbox_ShowColorGrid = new JCheckBox("   show color grid");
-    checkbox_ShowColorGrid.setToolTipText("show the color/chunks grid");
-    checkbox_ShowColorGrid.setSelected(Settings.getBoolean("colorgrid"));
-    if (checkbox_ShowColorGrid.isSelected() == true) {
+    // CheckBox to show the colour grid (debug feature)
+    checkbox_ShowColourGrid = new JCheckBox("   show colour grid");
+    checkbox_ShowColourGrid.setToolTipText("show the colour/chunks grid");
+    checkbox_ShowColourGrid.setSelected(Settings.getBoolean("colourgrid"));
+    if (checkbox_ShowColourGrid.isSelected() == true) {
       cpi.show();
-    } else if (checkbox_ShowColorGrid.isSelected() == false) {
+    } else if (checkbox_ShowColourGrid.isSelected() == false) {
       cpi.hide();
     }
-    checkbox_ShowColorGrid.addActionListener(new ActionListener() {
+    checkbox_ShowColourGrid.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         try {
-          Settings.set("colorgrid", checkbox_ShowColorGrid.isSelected());
-          if (checkbox_ShowColorGrid.isSelected() == true) {
+          Settings.set("colourgrid", checkbox_ShowColourGrid.isSelected());
+          if (checkbox_ShowColourGrid.isSelected() == true) {
             cpi.show();
-          } else if (checkbox_ShowColorGrid.isSelected() == false) {
+          } else if (checkbox_ShowColourGrid.isSelected() == false) {
             cpi.hide();
           }
         } catch (Exception e) {
@@ -361,12 +361,12 @@ public class UserInterface extends JFrame implements MqttCallback {
     // Label saturation percentage
     label_SaturationPercentage = new JLabel(Settings.getInteger("saturation") + " %");
     panel_Saturation.add(label_SaturationPercentage, "2, 1, center, center");
-    getContentPane().add(checkbox_ShowColorGrid, "1, 5, 4, 1");
+    getContentPane().add(checkbox_ShowColourGrid, "1, 5, 4, 1");
 
     // CheckBox restore light
     checkbox_RestoreLight = new JCheckBox("   restore light");
     checkbox_RestoreLight
-        .setToolTipText("restore the color/brightness from your lights when the program stopped");
+        .setToolTipText("restore the colour/brightness from your lights when the program stopped");
     checkbox_RestoreLight.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         Settings.set("restorelight", checkbox_RestoreLight.isSelected());

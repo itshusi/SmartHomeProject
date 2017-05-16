@@ -7,16 +7,17 @@ public class ColourCalc {
   // created with help from:
   // https://github.com/PhilipsHue/PhilipsHueSDK-iOS-OSX/commit/f41091cf671e13fe8c32fcced12604cd31cceaf3
 
-  public static double[] translate(Color color, Boolean useGammaCorrection) // translate in CIE 1931
-                                                                            // colorspace for hue
+  public static double[] translate(Color colour, Boolean useGammaCorrection) // translate in CIE
+                                                                             // 1931
+                                                                             // colourspace for hue
   {
     double[] xyDefault = {0.31, 0.32};
 
-    float[] colorHSB = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+    float[] colourHSB = Color.RGBtoHSB(colour.getRed(), colour.getGreen(), colour.getBlue(), null);
 
-    float red = ((float) color.getRed() / 255f);
-    float green = ((float) color.getGreen() / 255f);
-    float blue = ((float) color.getBlue() / 255f);
+    float red = ((float) colour.getRed() / 255f);
+    float green = ((float) colour.getGreen() / 255f);
+    float blue = ((float) colour.getBlue() / 255f);
 
     if (useGammaCorrection) {
       if (red > 0.04045) {
@@ -50,12 +51,12 @@ public class ColourCalc {
     xy[0] = X / (X + Y + Z);
     xy[1] = Y / (X + Y + Z);
 
-    // set default color if float/color is NaN
+    // set default colour if float/colour is NaN
     if (Double.isNaN(xy[0]) || Double.isNaN(xy[1])) {
       xy = xyDefault;
     }
     // prevent oversaturated purple
-    else if (colorHSB[2] < 1.55f / 255f && (colorHSB[0] > 0.78 && colorHSB[0] < 0.87)) {
+    else if (colourHSB[2] < 1.55f / 255f && (colourHSB[0] > 0.78 && colourHSB[0] < 0.87)) {
       xy = xyDefault;
     }
 

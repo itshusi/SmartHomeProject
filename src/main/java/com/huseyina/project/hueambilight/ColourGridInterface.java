@@ -17,7 +17,7 @@ import java.awt.event.WindowEvent;
 public class ColourGridInterface {
   public JFrame frame;
   private JPanel contentpane;
-  public JLabel label_Colors;
+  public JLabel label_Colours;
 
   public ColourGridInterface() {
     initialize();
@@ -34,8 +34,8 @@ public class ColourGridInterface {
     frame.addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent arg0) {
-        Main.ui.checkbox_ShowColorGrid.setSelected(false);
-        Settings.set("colorgrid", false);
+        Main.ui.checkbox_ShowColourGrid.setSelected(false);
+        Settings.set("colourgrid", false);
         hide();
       }
     });
@@ -46,8 +46,8 @@ public class ColourGridInterface {
     contentpane.setLayout(new GridLayout(0, 1, 0, 0));
     frame.setContentPane(contentpane);
 
-    label_Colors = new JLabel();
-    contentpane.add(label_Colors);
+    label_Colours = new JLabel();
+    contentpane.add(label_Colours);
 
     frame.setVisible(false);
   }
@@ -75,29 +75,29 @@ public class ColourGridInterface {
                                                                                                      // chunks
                                                                                                      // amount
   {
-    int ChunkResX = (int) (SyncProcess.captureSize.getWidth() / 3) / SyncProcess.chunksNumX;
-    int ChunkResY = (int) (SyncProcess.captureSize.getHeight() / 3) / SyncProcess.chunksNumY;
+    int ChunkResX = (int) (SyncProcess.imageSize.getWidth() / 3) / SyncProcess.chunksNumX;
+    int ChunkResY = (int) (SyncProcess.imageSize.getHeight() / 3) / SyncProcess.chunksNumY;
 
     BufferedImage b = new BufferedImage(ChunkResX * SyncProcess.chunksNumX,
         ChunkResY * SyncProcess.chunksNumY, BufferedImage.TYPE_INT_RGB);
     Graphics g = b.createGraphics();
 
     // create a raster based on number of chunks
-    Color color = Color.gray;
+    Color colour = Color.gray;
     for (int x = 0; x < SyncProcess.chunksNumX; x++) {
       for (int y = 0; y < SyncProcess.chunksNumY; y++) {
         if (x % 2 == y % 2)
-          color = Color.gray;
+          colour = Color.gray;
         else
-          color = Color.darkGray;
+          colour = Color.darkGray;
 
-        g.setColor(color);
+        g.setColor(colour);
         g.drawRect(x * ChunkResX, y * ChunkResY, ChunkResX, ChunkResY);
         g.fillRect(x * ChunkResX, y * ChunkResY, ChunkResX, ChunkResY);
       }
     }
 
-    label_Colors.setIcon(new ImageIcon(b));
+    label_Colours.setIcon(new ImageIcon(b));
 
     frame.pack();
     frame.pack(); // i dont know why, but it is needed to function properly

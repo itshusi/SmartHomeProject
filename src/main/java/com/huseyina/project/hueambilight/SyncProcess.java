@@ -13,8 +13,7 @@ import javax.swing.ImageIcon;
 
 public class SyncProcess {
 
-  private static Rectangle imgSize = null;
-  public static Rectangle captureSize = null;
+  public static Rectangle imageSize = null;
   public static int chunksNumX;
   public static int chunksNumY;
 
@@ -34,34 +33,24 @@ public class SyncProcess {
 
   public static void setStandbyOutput() throws Exception {
     setSettings();
-    Main.ui.cpi.setStandbyIcon(captureSize, chunksNumX, chunksNumY);
+    Main.ui.cpi.setStandbyIcon(imageSize, chunksNumX, chunksNumY);
   }
 
   private static void setSettings() {
     // setup screen area
-    double ratio;
-    int x, y, w, h;
     try {
-      imgSize = setImgBounds();
+      imageSize = setImgBounds();
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
-    ratio = 1.0;
-    w = (int) imgSize.getWidth();
-    h = (int) imgSize.getHeight();
-    x = 0;
-    y = 0;
-
-    captureSize = new Rectangle((int) imgSize.getX() + x, (int) imgSize.getY() + y, w, h);
 
     // calculate number of chunks
     double chunks = Settings.getInteger("chunks");
     chunks = 3 + 0.35 * Math.pow(chunks, 1.4);
     chunksNumX = (int) Math.round(chunks);
     chunksNumY =
-        (int) Math.round(((double) captureSize.height / (double) captureSize.width) * chunksNumX);
+        (int) Math.round(((double) imageSize.height / (double) imageSize.width) * chunksNumX);
     // round -> exact | ceil (round up) -> less options, always transverse | nothing (round down) ->
     // imprecise
   }
@@ -75,20 +64,17 @@ public class SyncProcess {
 
   private static int lFormat = Settings.getInteger("format");
   private static int lChunks = Settings.getInteger("chunks");
-  private static int lScreen = Settings.getInteger("screen");
-  private static boolean forceStandbyColorGrid = false;
+  private static boolean forceStandbyColourGrid = false;
 
   private static void applyChanges() throws Exception // apply changed settings
   {
-    forceStandbyColorGrid = false;
-    if (Settings.getInteger("format") != lFormat || Settings.getInteger("chunks") != lChunks
-        || Settings.getInteger("screen") != lScreen) {
+    forceStandbyColourGrid = false;
+    if (Settings.getInteger("format") != lFormat || Settings.getInteger("chunks") != lChunks) {
       lFormat = Settings.getInteger("format");
       lChunks = Settings.getInteger("chunks");
-      lScreen = Settings.getInteger("screen");
       setSettings();
-      Main.ui.cpi.setStandbyIcon(captureSize, chunksNumX, chunksNumY);
-      forceStandbyColorGrid = true;
+      Main.ui.cpi.setStandbyIcon(imageSize, chunksNumX, chunksNumY);
+      forceStandbyColourGrid = true;
     }
   }
 
@@ -120,10 +106,10 @@ public class SyncProcess {
     avgChunks(chunks);
   }
 
-  private static void avgChunks(BufferedImage[] chunks) throws Exception // get average color of
+  private static void avgChunks(BufferedImage[] chunks) throws Exception // get average colour of
                                                                          // each chunk
   {
-    Color[] avgColors = new Color[chunks.length];
+    Color[] avgColours = new Color[chunks.length];
 
     for (int i = 0; i < chunks.length; i++) {
       int avgR = 0;
@@ -132,32 +118,32 @@ public class SyncProcess {
 
       for (int x = 0; x < chunks[i].getWidth(); x++) {
         for (int y = 0; y < chunks[i].getHeight(); y++) {
-          Color pColor = new Color(chunks[i].getRGB(x, y));
-          avgR += pColor.getRed();
-          avgG += pColor.getGreen();
-          avgB += pColor.getBlue();
+          Color pColour = new Color(chunks[i].getRGB(x, y));
+          avgR += pColour.getRed();
+          avgG += pColour.getGreen();
+          avgB += pColour.getBlue();
         }
       }
 
       avgR = avgR / (chunks[i].getWidth() * chunks[i].getHeight());
       avgG = avgG / (chunks[i].getWidth() * chunks[i].getHeight());
       avgB = avgB / (chunks[i].getWidth() * chunks[i].getHeight());
-      avgColors[i] = new Color(avgR, avgG, avgB);
+      avgColours[i] = new Color(avgR, avgG, avgB);
     }
 
     if (Main.ui.cpi.frame.isVisible()) {
-      drawColorGrid(avgColors);
+      drawColourGrid(avgColours);
     }
 
-    analyse(avgColors);
+    analyse(avgColours);
   }
 
-  private static void drawColorGrid(Color[] ColorContainer) // draw the chunks in the color grid
-                                                            // interface
+  private static void drawColourGrid(Color[] ColourContainer) // draw the chunks in the colour grid
+  // interface
   {
-    if (forceStandbyColorGrid == false) {
-      int ChunkResX = (int) (captureSize.getWidth() / 3) / chunksNumX;
-      int ChunkResY = (int) (captureSize.getHeight() / 3) / chunksNumY;
+    if (forceStandbyColourGrid == false) {
+      int ChunkResX = (int) (imageSize.getWidth() / 3) / chunksNumX;
+      int ChunkResY = (int) (imageSize.getHeight() / 3) / chunksNumY;
 
       BufferedImage b = new BufferedImage(ChunkResX * chunksNumX, ChunkResY * chunksNumY,
           BufferedImage.TYPE_INT_RGB);
@@ -166,23 +152,23 @@ public class SyncProcess {
       int i = 0;
       for (int x = 0; x < chunksNumX; x++) {
         for (int y = 0; y < chunksNumY; y++) {
-          g.setColor(ColorContainer[i]);
+          g.setColor(ColourContainer[i]);
           g.drawRect(x * ChunkResX, y * ChunkResY, ChunkResX, ChunkResY);
           g.fillRect(x * ChunkResX, y * ChunkResY, ChunkResX, ChunkResY);
           i++;
         }
       }
 
-      Main.ui.cpi.label_Colors.setIcon(new ImageIcon(b));
+      Main.ui.cpi.label_Colours.setIcon(new ImageIcon(b));
       Main.ui.cpi.frame.pack();
     }
   }
 
-  private static void analyse(Color[] colorcontainer) throws Exception // analyse all chunks
+  private static void analyse(Color[] colourcontainer) throws Exception // analyse all chunks
   {
-    float[] temp_color;
+    float[] temp_colour;
 
-    float[] avg_color = Color.RGBtoHSB(0, 0, 0, null);
+    float[] avg_colour = Color.RGBtoHSB(0, 0, 0, null);
 
     float minSat = 1;
     float maxSat = 0;
@@ -190,47 +176,48 @@ public class SyncProcess {
     float maxBri = 0;
 
     int[] avg_rgb = new int[3];
-    for (Color color : colorcontainer) // get average color
+    for (Color colour : colourcontainer) // get average colour
     {
-      temp_color = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+      temp_colour = Color.RGBtoHSB(colour.getRed(), colour.getGreen(), colour.getBlue(), null);
 
-      if (temp_color[1] <= minSat) {
-        minSat = temp_color[1];
+      if (temp_colour[1] <= minSat) {
+        minSat = temp_colour[1];
       }
-      if (temp_color[1] >= maxSat) {
-        maxSat = temp_color[1];
+      if (temp_colour[1] >= maxSat) {
+        maxSat = temp_colour[1];
       }
-      if (temp_color[2] <= minBri) {
-        minBri = temp_color[2];
+      if (temp_colour[2] <= minBri) {
+        minBri = temp_colour[2];
       }
-      if (temp_color[2] >= maxBri) {
-        maxBri = temp_color[2];
+      if (temp_colour[2] >= maxBri) {
+        maxBri = temp_colour[2];
       }
 
-      avg_rgb[0] += color.getRed();
-      avg_rgb[1] += color.getGreen();
-      avg_rgb[2] += color.getBlue();
+      avg_rgb[0] += colour.getRed();
+      avg_rgb[1] += colour.getGreen();
+      avg_rgb[2] += colour.getBlue();
     }
-    avg_rgb[0] = avg_rgb[0] / colorcontainer.length;
-    avg_rgb[1] = avg_rgb[1] / colorcontainer.length;
-    avg_rgb[2] = avg_rgb[2] / colorcontainer.length;
-    avg_color = Color.RGBtoHSB(avg_rgb[0], avg_rgb[1], avg_rgb[2], null);
+    avg_rgb[0] = avg_rgb[0] / colourcontainer.length;
+    avg_rgb[1] = avg_rgb[1] / colourcontainer.length;
+    avg_rgb[2] = avg_rgb[2] / colourcontainer.length;
+    avg_colour = Color.RGBtoHSB(avg_rgb[0], avg_rgb[1], avg_rgb[2], null);
 
 
-    Color[] extrColor = new Color[1];
-    extrColor[0] = Color.getHSBColor(avg_color[0], avg_color[1], avg_color[2]);
+    Color[] extrColour = new Color[1];
+    extrColour[0] = Color.getHSBColor(avg_colour[0], avg_colour[1], avg_colour[2]);
 
-    setLightColor(extrColor);
+    setLightColour(extrColour);
   }
 
-  private static void setLightColor(Color[] extrColor) throws Exception // distribute the colors to
-                                                                        // the lights
+  private static void setLightColour(Color[] extrColour) throws Exception // distribute the colours
+                                                                          // to
+  // the lights
   {
     for (PHLight light : PHBridge.lights) {
       boolean active = Settings.Light.getActive(light);
 
       if (active) {
-        Main.hueControl.setLight(light, extrColor[0]);
+        Main.hueControl.setLight(light, extrColour[0]);
       }
     }
   }

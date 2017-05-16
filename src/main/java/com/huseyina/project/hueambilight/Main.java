@@ -7,7 +7,7 @@ import java.util.Arrays;
 public class Main {
   public static UserInterface ui;
   public static Control hueControl;
-  public static WebcamViewer webcamViewer;
+  public static WebcamConnector webcamConnect;
   public static ArrayList<String> arguments = new ArrayList<String>();
 
   public static void main(String[] args) throws Exception {
@@ -21,7 +21,7 @@ public class Main {
 
     Settings.check();
 
-    webcamViewer = new WebcamViewer();
+    webcamConnect = new WebcamConnector();
     ui = new UserInterface();
     ui.mqttTask();
     hueControl = new Control();

@@ -495,6 +495,8 @@ public class UserInterface extends JFrame implements MqttCallback {
   String topicName = "startambilight";
   int qos = 1;
   final String brokerUrl = "tcp://m21.cloudmqtt.com:14403";
+  MqttClient client;
+  MqttConnectOptions conOpt;
 
   public void mqttTask() throws MqttSecurityException, MqttException {
     String tmpDir = System.getProperty("java.io.tmpdir");
@@ -502,13 +504,13 @@ public class UserInterface extends JFrame implements MqttCallback {
 
     // Construct the connection options object that contains connection parameters
     // such as cleanSession and LWT
-    MqttConnectOptions conOpt = new MqttConnectOptions();
+    conOpt = new MqttConnectOptions();
     conOpt.setCleanSession(true);
     conOpt.setUserName("huseyin");
     conOpt.setPassword(new char[] {'h', 'u', 's', 'e', 'y', 'i', 'n'});
 
     // Construct an MQTT blocking mode client
-    MqttClient client = new MqttClient(brokerUrl, clientId, dataStore);
+    client = new MqttClient(brokerUrl, clientId, dataStore);
 
     // Set this wrapper as the callback handler
     client.setCallback(this);
@@ -542,10 +544,13 @@ public class UserInterface extends JFrame implements MqttCallback {
    * @see MqttCallback#connectionLost(Throwable)
    */
   public void connectionLost(Throwable cause) {
-    // Called when the connection to the server has been lost.
-    // An application may choose to implement reconnection
-    // logic at this point. This sample simply exits.
     System.out.print("Connection to " + brokerUrl + " lost!" + cause);
+    try {
+      client.connect(conOpt);
+    } catch (MqttException e) {
+      e.printStackTrace();
+    }
+    
   }
 
   /**
